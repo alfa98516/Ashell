@@ -1,4 +1,6 @@
 #include "dir.h"
+#include "parser.h"
+
 #include <fcntl.h>
 #include <pty.h>
 #include <stddef.h>
@@ -10,9 +12,8 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#define MAX_ARG_NAME 255
-#define MAX_ARGS     255
-#define MAX_JOBS     32
+#define MAX_ARGS 255
+#define MAX_JOBS 32
 #define e(err, ...)                                                                                \
     if (err == -1) {                                                                               \
         fprintf(stderr, __VA_ARGS__);                                                              \
@@ -125,12 +126,12 @@ int prompt() {
             e(err, "%s: Not a recognized command\n", args[0]);
             exit(0);
         } else if (!isbg) { // wait for child if its not a background proccess
+            wait(NULL);
             int nbytes = 0, n;
             while ((n = read(master_fd, out + nbytes, sizeof(out) - nbytes - 1)) > 0) {
                 nbytes += n;
             }
             out[nbytes] = '\0';
-            wait(NULL);
             printf("%s", out);
             close(master_fd);
         }

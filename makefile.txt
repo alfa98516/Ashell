@@ -1,9 +1,7 @@
 # sources 
 SRC    := $(filter-out testing.c, $(wildcard *.c))
-TESTSRC = testing.c parser.c
+TESTSRC = testing.c 
 OBJ     = $(SRC:.c=.o)
-TESTOBJ = $(TESTSRC:.c=.o)
-
 
 # target
 TARGET     = ashell
@@ -31,9 +29,9 @@ $(TARGET): $(OBJ)
 
 # test build
 # Intended for testing specific header files. 
-testing: $(TARGETTEST)
+test: $(TARGETTEST)
 
-$(TARGETTEST): $(TESTOBJ) testing.o
+$(TARGETTEST): $(OBJ) testing.o
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 
 testing.o: testing.c
@@ -41,6 +39,6 @@ testing.o: testing.c
 
 
 clean:
-	rm -f $(OBJ) $(TESTOBJ) $(TARGET) $(TARGETTEST)
+	rm -f $(OBJ) $(TARGET) $(TARGETTEST)
 
-.PHONY: all clean testing
+.PHONY: all clean test
